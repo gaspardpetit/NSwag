@@ -10,6 +10,7 @@ using NJsonSchema;
 using NJsonSchema.CodeGeneration;
 using NJsonSchema.CodeGeneration.CSharp;
 using NSwag.CodeGeneration.CSharp.Models;
+using NSwag.CodeGeneration;
 
 namespace NSwag.CodeGeneration.CSharp
 {
@@ -100,6 +101,7 @@ namespace NSwag.CodeGeneration.CSharp
         /// <returns>The code artifact collection.</returns>
         protected override IEnumerable<CodeArtifact> GenerateDtoTypes()
         {
+            _document.RemoveCaseInsensitiveEnumDuplicates();
             var generator = new CSharpGenerator(_document, _settings.CSharpGeneratorSettings, _resolver);
             return generator.GenerateTypes();
         }
