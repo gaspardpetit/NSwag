@@ -361,5 +361,15 @@ namespace NSwag.Commands.CodeGeneration
             get => Settings.CSharpGeneratorSettings.GenerateNullableReferenceTypes;
             set => Settings.CSharpGeneratorSettings.GenerateNullableReferenceTypes = value;
         }
+
+        [Argument(Name = "UseOriginalPropertyNames", IsRequired = false,
+            Description = "Specifies whether to keep the original casing of schema properties (default: false).")]
+        public bool UseOriginalPropertyNames
+        {
+            get => Settings.CSharpGeneratorSettings.PropertyNameGenerator is NSwag.CodeGeneration.CSharp.OriginalCSharpPropertyNameGenerator;
+            set => Settings.CSharpGeneratorSettings.PropertyNameGenerator = value
+                ? new NSwag.CodeGeneration.CSharp.OriginalCSharpPropertyNameGenerator()
+                : new CSharpPropertyNameGenerator();
+        }
     }
 }
