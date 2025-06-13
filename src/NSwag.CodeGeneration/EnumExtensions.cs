@@ -62,15 +62,16 @@ namespace NSwag.CodeGeneration
             schema = schema.ActualSchema;
             if (schema.Enumeration?.Count > 1 && schema.Enumeration.All(e => e is string))
             {
-                var unique = new List<object>();
+                var uniqueValues = new List<string>();
                 var uniqueNames = new List<string?>();
                 var comparer = StringComparer.OrdinalIgnoreCase;
+
                 for (int i = 0; i < schema.Enumeration.Count; i++)
                 {
                     var value = (string)schema.Enumeration[i];
-                    if (!unique.Cast<string>().Any(u => comparer.Equals(u, value)))
+                    if (!uniqueValues.Any(v => comparer.Equals(v, value)))
                     {
-                        unique.Add(value);
+                        uniqueValues.Add(value);
                         if (schema.EnumerationNames?.Count > i)
                         {
                             uniqueNames.Add(schema.EnumerationNames[i]);
@@ -78,10 +79,10 @@ namespace NSwag.CodeGeneration
                     }
                 }
 
-                if (unique.Count != schema.Enumeration.Count)
+                if (uniqueValues.Count != schema.Enumeration.Count)
                 {
                     schema.Enumeration.Clear();
-                    foreach (var item in unique)
+                    foreach (var item in uniqueValues)
                     {
                         schema.Enumeration.Add(item);
                     }
@@ -94,6 +95,11 @@ namespace NSwag.CodeGeneration
                             schema.EnumerationNames.Add(name);
                         }
                     }
+                }
+
+                if (schema.EnumerationNames == null)
+                {
+                    schema.EnumerationNames = uniqueValues.ToList();
                 }
             }
 
